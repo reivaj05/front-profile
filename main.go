@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/reivaj05/front-profile/auth"
 	"github.com/reivaj05/front-profile/home"
+	"github.com/reivaj05/front-profile/profile"
 
 	"github.com/reivaj05/GoConfig"
 	"github.com/reivaj05/GoLogger"
@@ -78,6 +79,7 @@ func process() {
 func createEndpoints() (endpoints []*GoServer.Endpoint) {
 	endpoints = append(endpoints, home.Endpoints...)
 	endpoints = append(endpoints, auth.Endpoints...)
+	endpoints = append(endpoints, profile.Endpoints...)
 	return
 }
 
