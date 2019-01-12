@@ -25,9 +25,4 @@ var Endpoints = []*GoServer.Endpoint{
 		Path:    "/auth/reset_password/",
 		Handler: resetPasswordHandler,
 	},
-	&GoServer.Endpoint{
-		Method:  "GET",
-		Path:    "/auth/",
-		Handler: homeHandler,
-	},
 }
