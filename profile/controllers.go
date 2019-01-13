@@ -23,17 +23,20 @@ type profile struct {
 
 var profileTemplate = template.Must(template.ParseFiles(common.LayoutTemplate, "profile/templates/profile.html"))
 
+type data struct {
+	IsLogged bool
+}
+
 func profileHandler(rw http.ResponseWriter, req *http.Request) {
 	fmt.Println("TODO: Implement profile")
 	if req.Method == "POST" {
 		updateProfile(req)
 	}
-	profileTemplate.ExecuteTemplate(rw, "layout", nil)
+	profileTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: true})
 }
 
 func updateProfile(req *http.Request) {
 	fmt.Println("TODO: Implement profile PUT")
-	req.ParseForm()
 	response, status, err := common.MakeRequest(createProfileBody(req), "PUT", usersEndpoint+"1/")
 	fmt.Println(response, status, err)
 }

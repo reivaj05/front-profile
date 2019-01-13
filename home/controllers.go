@@ -1,7 +1,6 @@
 package home
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 
@@ -10,8 +9,15 @@ import (
 
 var homeTemplate = template.Must(template.ParseFiles(common.LayoutTemplate, "home/templates/home.html"))
 
-func homeHandler(rw http.ResponseWriter, req *http.Request) {
-	fmt.Println("TODO: Implement home")
+type data struct {
+	IsLogged bool
+}
 
-	homeTemplate.ExecuteTemplate(rw, "layout", nil)
+func homeHandler(rw http.ResponseWriter, req *http.Request) {
+	homeTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: isLogged(req)})
+}
+
+func isLogged(req *http.Request) bool {
+	c, _ := req.Cookie("loggedIn")
+	return c != nil
 }

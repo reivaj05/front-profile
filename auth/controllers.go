@@ -20,11 +20,15 @@ var logoutTemplate = template.Must(template.ParseFiles(common.LayoutTemplate, "a
 var resetPasswordTemplate = template.Must(template.ParseFiles(
 	common.LayoutTemplate, "auth/templates/reset-password.html"))
 
+type data struct {
+	IsLogged bool
+}
+
 func signupHandler(rw http.ResponseWriter, req *http.Request) {
 	if req.Method == "POST" {
 		signup(rw, req)
 	} else {
-		signupTemplate.ExecuteTemplate(rw, "layout", nil)
+		signupTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: false})
 	}
 }
 
@@ -41,7 +45,7 @@ func loginHandler(rw http.ResponseWriter, req *http.Request) {
 	if req.Method == "POST" {
 		login(rw, req)
 	} else {
-		loginTemplate.ExecuteTemplate(rw, "layout", nil)
+		loginTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: false})
 	}
 }
 
@@ -73,7 +77,7 @@ func resetPasswordHandler(rw http.ResponseWriter, req *http.Request) {
 	if req.Method == "POST" {
 		resetPassword(req)
 	}
-	resetPasswordTemplate.ExecuteTemplate(rw, "layout", nil)
+	resetPasswordTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: false})
 }
 
 func resetPassword(req *http.Request) {
