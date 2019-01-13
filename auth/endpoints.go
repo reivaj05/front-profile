@@ -10,36 +10,36 @@ var Endpoints = []*GoServer.Endpoint{
 	&GoServer.Endpoint{
 		Method:  "GET",
 		Path:    "/auth/signup/",
-		Handler: common.WithHTMLContentType(common.IsUserLoggedIn(signupHandler)),
+		Handler: common.WithHTMLContentType(common.UserAuthenticated(signupHandler)),
 	},
 	&GoServer.Endpoint{
 		Method:  "POST",
 		Path:    "/auth/signup/",
-		Handler: common.WithHTMLContentType(common.IsUserLoggedIn(signupHandler)),
+		Handler: common.WithHTMLContentType(common.UserAuthenticated(signupHandler)),
 	},
 	&GoServer.Endpoint{
 		Method:  "GET",
 		Path:    "/auth/login/",
-		Handler: common.WithHTMLContentType(common.IsUserLoggedIn(loginHandler)),
+		Handler: common.WithHTMLContentType(common.UserAuthenticated(loginHandler)),
 	},
 	&GoServer.Endpoint{
 		Method:  "POST",
 		Path:    "/auth/login/",
-		Handler: common.WithHTMLContentType(common.IsUserLoggedIn(loginHandler)),
+		Handler: common.WithHTMLContentType(common.UserAuthenticated(loginHandler)),
 	},
 	&GoServer.Endpoint{
 		Method:  "GET",
 		Path:    "/auth/logout/",
-		Handler: common.WithHTMLContentType(common.IsUserLoggedIn(logoutHandler)),
+		Handler: common.WithHTMLContentType(common.UserAuthenticated(logoutHandler)),
 	},
 	&GoServer.Endpoint{
 		Method:  "GET",
 		Path:    "/auth/reset_password/",
-		Handler: common.WithHTMLContentType(common.IsUserLoggedIn(resetPasswordHandler)),
+		Handler: common.WithHTMLContentType(common.UserAuthenticated(resetPasswordHandler)),
 	},
 	&GoServer.Endpoint{
 		Method:  "POST",
 		Path:    "/auth/reset_password/",
-		Handler: common.WithHTMLContentType(common.IsUserLoggedIn(resetPasswordHandler)),
+		Handler: common.WithHTMLContentType(common.UserAuthenticated(resetPasswordHandler)),
 	},
 }

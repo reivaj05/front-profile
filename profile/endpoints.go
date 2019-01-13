@@ -10,11 +10,11 @@ var Endpoints = []*GoServer.Endpoint{
 	&GoServer.Endpoint{
 		Method:  "GET",
 		Path:    "/profile/",
-		Handler: common.IsUserLoggedIn(common.WithHTMLContentType(profileHandler)),
+		Handler: common.UserUnauthenticated(common.WithHTMLContentType(profileHandler)),
 	},
 	&GoServer.Endpoint{
 		Method:  "POST",
 		Path:    "/profile/",
-		Handler: common.IsUserLoggedIn(common.WithHTMLContentType(profileHandler)),
+		Handler: common.UserUnauthenticated(common.WithHTMLContentType(profileHandler)),
 	},
 }
