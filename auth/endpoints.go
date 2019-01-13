@@ -30,7 +30,7 @@ var Endpoints = []*GoServer.Endpoint{
 	&GoServer.Endpoint{
 		Method:  "GET",
 		Path:    "/auth/logout/",
-		Handler: common.WithHTMLContentType(common.UserAuthenticated(logoutHandler)),
+		Handler: common.WithHTMLContentType(logoutHandler),
 	},
 	&GoServer.Endpoint{
 		Method:  "GET",

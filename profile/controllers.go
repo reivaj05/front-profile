@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strconv"
 
 	"github.com/reivaj05/front-profile/common"
 )
 
 const (
-	usersEndpoint = "/users/"
+	usersEndpoint = "users/"
 )
 
 type profile struct {
@@ -18,8 +19,8 @@ type profile struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Phone     string `json:"phone"`
-	Address   string `json:"Address"`
-	ID        string
+	Address   string `json:"address"`
+	ID        int    `json:"-"`
 }
 
 var profileTemplate = template.Must(template.ParseFiles(common.LayoutTemplate, "profile/templates/profile.html"))
@@ -27,25 +28,22 @@ var profileTemplate = template.Must(template.ParseFiles(common.LayoutTemplate, "
 type data struct {
 	IsLogged bool
 	User     profile
+	Success  bool
 }
 
 func profileHandler(rw http.ResponseWriter, req *http.Request) {
-	fmt.Println("TODO: Implement profile")
+	var success = false
 	if req.Method == "POST" {
 		updateProfile(req)
+		success = true
 	}
-	profileTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: true})
+	profileTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: true, User: getProfile(req), Success: success})
 }
 
-// func getProfile() profile {
-// 	response, status, err := common.MakeRequest("", "GET", usersEndpoint+"1/")
-// 	fmt.Println(response, status, err)
-// }
-
 func updateProfile(req *http.Request) {
-	fmt.Println("TODO: Implement profile PUT")
-	response, status, err := common.MakeRequest(createProfileBody(req), "PUT", usersEndpoint+"1/")
-	fmt.Println(response, status, err)
+	id := getProfileID(req)
+	endpoint := fmt.Sprintf("%s%d/", usersEndpoint, id)
+	fmt.Println(common.MakeRequest(createProfileBody(req), "PUT", endpoint))
 }
 
 func createProfileBody(req *http.Request) string {
@@ -57,4 +55,23 @@ func createProfileBody(req *http.Request) string {
 		Address:   req.FormValue("address"),
 	})
 	return string(data)
+}
+
+func getProfile(req *http.Request) profile {
+	id := getProfileID(req)
+	endpoint := fmt.Sprintf("%s%d/", usersEndpoint, id)
+	response, _, _ := common.MakeRequest("", "GET", endpoint)
+	return parseProfile(response)
+}
+
+func getProfileID(req *http.Request) int {
+	c, _ := req.Cookie("userID")
+	id, _ := strconv.Atoi(c.Value)
+	return int(id)
+}
+
+func parseProfile(response string) profile {
+	var pro profile
+	json.Unmarshal([]byte(response), &pro)
+	return pro
 }

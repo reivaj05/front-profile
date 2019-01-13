@@ -42,8 +42,23 @@ func SetAuthCookies(rw http.ResponseWriter, response string) {
 	})
 }
 
+func ClearAuthCookies(rw http.ResponseWriter) {
+	http.SetCookie(rw, &http.Cookie{
+		Name:   "loggedIn",
+		Value:  "",
+		Path:   "/",
+		MaxAge: -1,
+	})
+	http.SetCookie(rw, &http.Cookie{
+		Name:   "userID",
+		Value:  "",
+		Path:   "/",
+		MaxAge: -1,
+	})
+}
+
 func getUserID(response string) string {
 	data, _ := GoJSON.New(response)
 	id, _ := data.GetFloatFromPath("ID")
-	return strconv.FormatFloat(id, 'f', 6, 64)
+	return strconv.Itoa(int(id))
 }

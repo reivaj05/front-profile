@@ -7,33 +7,37 @@
 
         <div style="padding-top:30px" class="panel-body" >
 
-            <div id="login-alert" class="alert alert-danger col-sm-12"></div>
+            {{ if .Success }}
+            <div id="login-alert" class="alert alert-success col-sm-12">
+            	<p>Profile updated</p>
+            </div>
+            {{ end }}
                 
             <form id="profileform" class="form-horizontal" role="form" action="/profile/" method="post">
                         
                 <div style="margin-bottom: 25px" class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input required id="email" type="text" class="form-control" name="email" value="" placeholder="Email">
+                    <input required id="email" type="text" class="form-control" name="email" value="{{ .User.Email }}" placeholder="Email">
                 </div>
 
                 <div style="margin-bottom: 25px" class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="firstName" type="text" class="form-control" name="firstName" value="" placeholder="First Name">
+                    <input id="firstName" type="text" class="form-control" name="firstName" value="{{ .User.FirstName }}" placeholder="First Name">
                 </div>
 
                 <div style="margin-bottom: 25px" class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="lastName" type="text" class="form-control" name="lastName" value="" placeholder="Last Name">
+                    <input id="lastName" type="text" class="form-control" name="lastName" value="{{ .User.LastName }}" placeholder="Last Name">
                 </div>
 
                 <div style="margin-bottom: 25px" class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                    <input id="phone" type="phone" class="form-control" name="phone" value="" placeholder="Phone">
+                    <input id="phone" type="phone" class="form-control" name="phone" value="{{ .User.Phone }}" placeholder="Phone">
                 </div>
 
                 <div style="margin-bottom: 25px" class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-                    <input id="address" type="text" class="form-control" name="address" value="" placeholder="Address">
+                    <input id="address" type="text" class="form-control" name="address" value="{{ .User.Address }}" placeholder="Address">
                 </div>
                     
 

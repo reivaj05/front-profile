@@ -9,8 +9,11 @@
         </div>     
 
         <div style="padding-top:30px" class="panel-body" >
-
-            <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+			{{ if .HasError }}
+            <div id="login-alert" class="alert alert-danger col-sm-12">
+            	<p>{{ .Error }}</p>
+            </div>
+            {{ end }}
                 
             <form id="signupform" class="form-horizontal" role="form" action="/auth/signup/" method="post">
                         

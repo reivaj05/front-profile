@@ -30,10 +30,11 @@
 			  		<ul class="nav navbar-nav">
 			    		<li class="active"><a href="/">Home</a></li>
 			    		{{ if not .IsLogged }}
-			    			<li><a href="/auth/login">Login/Sign Up</a></li>
+			    			<li><a href="/auth/login/">Login/Sign Up</a></li>
 			    		{{ end }}
 			    		{{ if .IsLogged }}
-			    			<li><a href="/profile">Profile</a></li>
+			    			<li><a href="/profile/">Profile</a></li>
+			    			<li><a href="/auth/logout/">Logout</a></li>
 			    		{{ end }}
 			  		</ul>
 				</div><!--/.nav-collapse -->
@@ -42,7 +43,7 @@
 		
 		<div class="container">
 	      	<div class="starter-template">
-	    		{{ template "content" }}
+	    		{{ template "content" . }}
 	      	</div>
 	    </div>
 

@@ -16,12 +16,14 @@ const (
 
 var signupTemplate = template.Must(template.ParseFiles(common.LayoutTemplate, "auth/templates/signup.html"))
 var loginTemplate = template.Must(template.ParseFiles(common.LayoutTemplate, "auth/templates/login.html"))
-var logoutTemplate = template.Must(template.ParseFiles(common.LayoutTemplate, "auth/templates/logout.html"))
 var resetPasswordTemplate = template.Must(template.ParseFiles(
 	common.LayoutTemplate, "auth/templates/reset-password.html"))
 
 type data struct {
 	IsLogged bool
+	HasError bool
+	Success  bool
+	Error    string
 }
 
 func signupHandler(rw http.ResponseWriter, req *http.Request) {
@@ -35,10 +37,14 @@ func signupHandler(rw http.ResponseWriter, req *http.Request) {
 func signup(rw http.ResponseWriter, req *http.Request) {
 	email := req.FormValue("email")
 	password := req.FormValue("password")
-	response, status, err := common.MakeRequest(fmt.Sprintf(`{"email": "%s", "password": "%s"}`, email, password), "POST", usersEndpoint)
-	fmt.Println(response, status, err)
-	// TODO: Handle response and errors
-	http.Redirect(rw, req, "/profile/", http.StatusSeeOther)
+	response, status, err := common.MakeRequest(fmt.Sprintf(`{"email": "%s", "password": "%s"}`, email, password),
+		"POST", usersEndpoint)
+	if status == http.StatusCreated && err == nil {
+		common.SetAuthCookies(rw, response)
+		http.Redirect(rw, req, "/profile/", http.StatusSeeOther)
+	} else {
+		signupTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: false, HasError: true, Error: response})
+	}
 }
 
 func loginHandler(rw http.ResponseWriter, req *http.Request) {
@@ -56,26 +62,32 @@ func login(rw http.ResponseWriter, req *http.Request) {
 	if status == http.StatusOK && err == nil {
 		common.SetAuthCookies(rw, response)
 		http.Redirect(rw, req, "/profile/", http.StatusSeeOther)
+	} else {
+		loginTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: false, HasError: true, Error: response})
 	}
 }
 
 func logoutHandler(rw http.ResponseWriter, req *http.Request) {
-	fmt.Println("TODO: Implement logout")
-
-	logoutTemplate.ExecuteTemplate(rw, "layout", nil)
+	common.ClearAuthCookies(rw)
+	http.Redirect(rw, req, "/home/", http.StatusSeeOther)
 }
 
 func resetPasswordHandler(rw http.ResponseWriter, req *http.Request) {
-	fmt.Println("TODO: Implement reset pasword")
 	if req.Method == "POST" {
-		resetPassword(req)
+		resetPassword(rw, req)
+		return
 	}
 	resetPasswordTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: false})
 }
 
-func resetPassword(req *http.Request) {
-	fmt.Println("TODO: Implement reset pasword POST")
+func resetPassword(rw http.ResponseWriter, req *http.Request) {
+	var d data
 	email := req.FormValue("email")
 	response, status, err := common.MakeRequest(fmt.Sprintf(`{"email": "%s"}`, email), "POST", resetPasswordEndpoint)
-	fmt.Println(response, status, err)
+	if status == http.StatusOK && err == nil {
+		d = data{IsLogged: false, Success: true}
+	} else {
+		d = data{IsLogged: false, HasError: true, Error: response}
+	}
+	resetPasswordTemplate.ExecuteTemplate(rw, "layout", d)
 }
