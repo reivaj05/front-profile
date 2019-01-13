@@ -53,16 +53,9 @@ func login(rw http.ResponseWriter, req *http.Request) {
 	email := req.FormValue("email")
 	password := req.FormValue("password")
 	response, status, err := common.MakeRequest(fmt.Sprintf(`{"email": "%s", "password": "%s"}`, email, password), "POST", loginEndpoint)
-	fmt.Println(response, status, err)
-	// TODO: Handle response and errors
 	if status == http.StatusOK && err == nil {
-		http.SetCookie(rw, &http.Cookie{
-			Name:  "loggedIn",
-			Value: "true",
-			Path:  "/",
-		})
+		common.SetAuthCookies(rw, response)
 		http.Redirect(rw, req, "/profile/", http.StatusSeeOther)
-
 	}
 }
 

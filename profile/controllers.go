@@ -19,12 +19,14 @@ type profile struct {
 	LastName  string `json:"lastName"`
 	Phone     string `json:"phone"`
 	Address   string `json:"Address"`
+	ID        string
 }
 
 var profileTemplate = template.Must(template.ParseFiles(common.LayoutTemplate, "profile/templates/profile.html"))
 
 type data struct {
 	IsLogged bool
+	User     profile
 }
 
 func profileHandler(rw http.ResponseWriter, req *http.Request) {
@@ -34,6 +36,11 @@ func profileHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 	profileTemplate.ExecuteTemplate(rw, "layout", data{IsLogged: true})
 }
+
+// func getProfile() profile {
+// 	response, status, err := common.MakeRequest("", "GET", usersEndpoint+"1/")
+// 	fmt.Println(response, status, err)
+// }
 
 func updateProfile(req *http.Request) {
 	fmt.Println("TODO: Implement profile PUT")
