@@ -11,7 +11,7 @@ import (
 const (
 	resetPasswordEndpoint = "auth/reset_password/"
 	loginEndpoint         = "auth/login/"
-	signupEndpoint        = "auth/signup/"
+	usersEndpoint         = "users/"
 )
 
 var signupTemplate = template.Must(template.ParseFiles(common.LayoutTemplate, "auth/templates/signup.html"))
@@ -21,41 +21,37 @@ var resetPasswordTemplate = template.Must(template.ParseFiles(
 	common.LayoutTemplate, "auth/templates/reset-password.html"))
 
 func signupHandler(rw http.ResponseWriter, req *http.Request) {
-	fmt.Println("TODO: Implement signup")
-
 	if req.Method == "POST" {
-		signup(req)
+		signup(rw, req)
+	} else {
+		signupTemplate.ExecuteTemplate(rw, "layout", nil)
 	}
-
-	signupTemplate.ExecuteTemplate(rw, "layout", nil)
 }
 
-func signup(req *http.Request) {
-	fmt.Println("TODO: Implement signup POST")
-	req.ParseForm()
+func signup(rw http.ResponseWriter, req *http.Request) {
 	email := req.FormValue("email")
 	password := req.FormValue("password")
-	response, status, err := common.MakeRequest(fmt.Sprintf(`{"email": "%s", "password": "%s"}`, email, password), "POST", signupEndpoint)
+	response, status, err := common.MakeRequest(fmt.Sprintf(`{"email": "%s", "password": "%s"}`, email, password), "POST", usersEndpoint)
 	fmt.Println(response, status, err)
+	// TODO: Handle response and errors
+	http.Redirect(rw, req, "/profile/", http.StatusSeeOther)
 }
 
 func loginHandler(rw http.ResponseWriter, req *http.Request) {
-	fmt.Println("TODO: Implement login")
-
 	if req.Method == "POST" {
-		login(req)
+		login(rw, req)
+	} else {
+		loginTemplate.ExecuteTemplate(rw, "layout", nil)
 	}
-
-	loginTemplate.ExecuteTemplate(rw, "layout", nil)
 }
 
-func login(req *http.Request) {
-	fmt.Println("TODO: Implement login POST")
-	req.ParseForm()
+func login(rw http.ResponseWriter, req *http.Request) {
 	email := req.FormValue("email")
 	password := req.FormValue("password")
 	response, status, err := common.MakeRequest(fmt.Sprintf(`{"email": "%s", "password": "%s"}`, email, password), "POST", loginEndpoint)
 	fmt.Println(response, status, err)
+	// TODO: Handle response and errors
+	http.Redirect(rw, req, "/profile/", http.StatusSeeOther)
 }
 
 func logoutHandler(rw http.ResponseWriter, req *http.Request) {
@@ -74,7 +70,6 @@ func resetPasswordHandler(rw http.ResponseWriter, req *http.Request) {
 
 func resetPassword(req *http.Request) {
 	fmt.Println("TODO: Implement reset pasword POST")
-	req.ParseForm()
 	email := req.FormValue("email")
 	response, status, err := common.MakeRequest(fmt.Sprintf(`{"email": "%s"}`, email), "POST", resetPasswordEndpoint)
 	fmt.Println(response, status, err)
